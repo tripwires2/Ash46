@@ -1,0 +1,760 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>ASH 4.6 Explorer</title>
+<style>
+:root {
+  --bg: #0a0e17;
+  --panel: #121826;
+  --accent: #00e5ff;
+  --accent2: #7c4dff;
+  --gold: #ffd54f;
+  --green: #69f0ae;
+  --orange: #ffab40;
+  --text: #e0e6f0;
+  --muted: #8b9bb4;
+  --border: #1e2a3a;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+  line-height: 1.55;
+  min-height: 100vh;
+  background-image: radial-gradient(circle at 20% 20%, #1a2332 0%, transparent 40%),
+                    radial-gradient(circle at 80% 80%, #0d1b2a 0%, transparent 40%);
+  padding-bottom: calc(env(safe-area-inset-bottom) + 12px);
+}
+header {
+  text-align: center;
+  padding: 1.6rem 1rem 0.6rem;
+  background: linear-gradient(180deg, #0f1624, transparent);
+}
+h1 {
+  font-size: 1.9rem;
+  background: linear-gradient(90deg, var(--accent), var(--accent2));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  letter-spacing: 0.5px;
+}
+.subtitle { color: var(--muted); font-size: 0.82rem; margin-top: 0.25rem; }
+.status-bar {
+  text-align: center;
+  padding: 0.45rem 0.75rem;
+  background: #0d1520;
+  border-bottom: 1px solid var(--border);
+  font-size: 0.82rem;
+  color: var(--green);
+  min-height: 32px;
+}
+.tab-radio { display: none; }
+.tab-label {
+  display: inline-block;
+  background: transparent;
+  border: 1px solid var(--border);
+  color: var(--text);
+  padding: 0.6rem 0.9rem;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 0.85rem;
+  min-height: 44px;
+  line-height: 1.2;
+  transition: all 0.15s;
+  user-select: none;
+  -webkit-user-select: none;
+}
+#tab-overview:checked ~ .nav-tabs label[for="tab-overview"],
+#tab-spheres:checked ~ .nav-tabs label[for="tab-spheres"],
+#tab-strategies:checked ~ .nav-tabs label[for="tab-strategies"],
+#tab-hybrid:checked ~ .nav-tabs label[for="tab-hybrid"],
+#tab-orbs:checked ~ .nav-tabs label[for="tab-orbs"],
+#tab-dynamics:checked ~ .nav-tabs label[for="tab-dynamics"],
+#tab-simulator:checked ~ .nav-tabs label[for="tab-simulator"],
+#tab-brief:checked ~ .nav-tabs label[for="tab-brief"],
+#tab-brief:checked ~ .nav-tabs label[for="tab-brief"],
+#tab-agi:checked ~ .nav-tabs label[for="tab-agi"],
+#tab-news:checked ~ .nav-tabs label[for="tab-news"],
+#tab-uap:checked ~ .nav-tabs label[for="tab-uap"],
+#tab-earth:checked ~ .nav-tabs label[for="tab-earth"] {
+  background: var(--accent);
+  color: #000;
+  border-color: var(--accent);
+}
+.section { display: none; }
+#tab-overview:checked ~ main #overview,
+#tab-spheres:checked ~ main #spheres,
+#tab-strategies:checked ~ main #strategies,
+#tab-hybrid:checked ~ main #hybrid,
+#tab-orbs:checked ~ main #orbs,
+#tab-dynamics:checked ~ main #dynamics,
+#tab-simulator:checked ~ main #simulator,
+#tab-brief:checked ~ main #brief,
+#tab-brief:checked ~ main #brief,
+#tab-agi:checked ~ main #agi,
+#tab-news:checked ~ main #news,
+#tab-uap:checked ~ main #uap,
+#tab-earth:checked ~ main #earth { display: block; }
+.card {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 1.1rem;
+  margin-bottom: 1rem;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.25);
+}
+.card h2 { color: var(--accent); margin-bottom: 0.6rem; font-size: 1.25rem; }
+.card h3 { color: var(--gold); margin: 0.8rem 0 0.4rem; font-size: 1.05rem; }
+details {
+  background: #0d1520;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  margin: 0.6rem 0;
+  padding: 0.6rem 0.8rem;
+}
+summary {
+  cursor: pointer;
+  font-weight: 600;
+  color: var(--gold);
+  min-height: 32px;
+  outline: none;
+}
+details p, details ul { margin-top: 0.5rem; }
+.sphere-grid, .mech-grid { display: grid; grid-template-columns: 1fr; gap: 0.8rem; margin-top: 0.8rem; }
+@media (min-width: 640px) { .sphere-grid, .mech-grid { grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); } }
+.sphere, .mech { background: #0d1520; border: 1px solid var(--border); border-radius: 10px; padding: 1rem; }
+.sphere.type1 { border-left: 4px solid var(--green); }
+.sphere.type2 { border-left: 4px solid var(--accent); }
+.sphere.type3 { border-left: 4px solid var(--gold); }
+.strategy-matrix { display: grid; grid-template-columns: 1fr; gap: 0.7rem; margin-top: 0.8rem; }
+@media (min-width: 500px) { .strategy-matrix { grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); } }
+.strategy { background: #0d1520; padding: 0.9rem; border-radius: 8px; border: 1px solid var(--border); }
+.strategy.dominant { border-color: var(--accent); }
+.slider-container { margin: 1rem 0; }
+.slider-container label { display: block; margin-bottom: 0.4rem; font-size: 0.95rem; }
+input[type=range] { width: 100%; height: 32px; accent-color: var(--accent); cursor: pointer; }
+.output {
+  background: #0a1018; padding: 1rem; border-radius: 8px; margin-top: 0.8rem;
+  font-family: ui-monospace, 'SF Mono', monospace; color: var(--green); white-space: pre-wrap;
+  font-size: 0.85rem; min-height: 80px;
+}
+.scenario-branch { background: #0d1520; border-left: 3px solid var(--accent2); padding: 0.9rem; margin: 0.6rem 0; border-radius: 0 8px 8px 0; }
+.btn-row { display: flex; flex-wrap: wrap; gap: 0.6rem; margin: 1rem 0; }
+button.action {
+  background: var(--accent);
+  color: #000;
+  border: none;
+  padding: 0.75rem 1.1rem;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 0.9rem;
+  min-height: 48px;
+  flex: 1 1 auto;
+  min-width: 120px;
+}
+button.action.secondary { background: transparent; color: var(--accent); border: 1px solid var(--accent); }
+.orb-visual {
+  width: 100%; height: 140px; background: radial-gradient(circle at center, rgba(0,229,255,0.15) 0%, transparent 70%);
+  border: 1px dashed var(--border); border-radius: 8px; display: flex; align-items: center; justify-content: center; margin: 0.8rem 0;
+}
+.orb { width: 36px; height: 36px; background: radial-gradient(circle, #fff 0%, var(--accent) 40%, transparent 70%); border-radius: 50%; box-shadow: 0 0 24px var(--accent); animation: pulse 2.5s ease-in-out infinite; }
+@keyframes pulse { 0%, 100% { transform: scale(1); opacity: 0.8; } 50% { transform: scale(1.25); opacity: 1; } }
+.legend { font-size: 0.78rem; color: var(--muted); text-align: center; margin-top: -0.4rem; margin-bottom: 0.8rem; }
+.archetype-bar, .species-bar { margin: 0.55rem 0; }
+.archetype-bar .label, .species-bar .label { display: flex; justify-content: space-between; font-size: 0.85rem; margin-bottom: 0.15rem; }
+.archetype-bar .bar, .species-bar .bar { height: 9px; background: #1e2a3a; border-radius: 5px; overflow: hidden; }
+.archetype-bar .fill, .species-bar .fill { height: 100%; background: linear-gradient(90deg, var(--accent), var(--accent2)); border-radius: 5px; transition: width 0.4s; }
+.species-bar .fill { background: linear-gradient(90deg, var(--green), var(--gold)); }
+.rationale { font-size: 0.75rem; color: var(--muted); margin-top: 0.1rem; margin-bottom: 0.4rem; }
+.brief-box {
+  background: #0a1018; border: 1px solid var(--border); border-radius: 8px; padding: 1rem; margin-top: 0.8rem;
+  font-family: ui-monospace, 'SF Mono', monospace; font-size: 0.82rem; line-height: 1.45;
+}
+.brief-box h3 { color: var(--gold); margin-top: 0; }
+.mini-nav { text-align: center; margin: 0.8rem 0; }
+.mini-nav a { color: var(--accent); text-decoration: none; font-size: 0.9rem; padding: 0.4rem 0.8rem; border: 1px solid var(--accent); border-radius: 6px; }
+.footer { text-align: center; padding: 1.5rem 1rem; color: var(--muted); font-size: 0.78rem; border-top: 1px solid var(--border); }
+@media (min-width: 768px) { h1 { font-size: 2.2rem; } .tab-label { font-size: 0.9rem; padding: 0.6rem 1rem; } main { padding: 1.5rem 1rem 3rem; } .card { padding: 1.4rem; } }
+</style>
+</head>
+<body>
+<header>
+  <h1>ADAPTIVE STRATEGY HYPOTHESIS 4.6</h1>
+  <p class="subtitle">Created by Robert Thomas • 18 Oct 2026 Complete Update</p>
+</header>
+<div class="status-bar" id="statusBar">Hiding Dominant • Hybrid Kin —</div>
+<input type="radio" name="tabs" id="tab-overview" class="tab-radio" checked>
+<input type="radio" name="tabs" id="tab-spheres" class="tab-radio">
+<input type="radio" name="tabs" id="tab-strategies" class="tab-radio">
+<input type="radio" name="tabs" id="tab-hybrid" class="tab-radio">
+<input type="radio" name="tabs" id="tab-dynamics" class="tab-radio">
+<input type="radio" name="tabs" id="tab-simulator" class="tab-radio">
+<input type="radio" name="tabs" id="tab-brief" class="tab-radio">
+<input type="radio" name="tabs" id="tab-brief" class="tab-radio">
+<input type="radio" name="tabs" id="tab-agi" class="tab-radio">
+<input type="radio" name="tabs" id="tab-news" class="tab-radio">
+<input type="radio" name="tabs" id="tab-uap" class="tab-radio">
+<input type="radio" name="tabs" id="tab-earth" class="tab-radio">
+<div class="nav-tabs" style="display:flex;justify-content:center;flex-wrap:wrap;gap:0.45rem;padding:0.7rem 0.5rem;background:var(--panel);position:sticky;top:0;z-index:20;border-bottom:1px solid var(--border);">
+<label for="tab-overview" class="tab-label">Overview</label>
+<label for="tab-spheres" class="tab-label">Spheres</label>
+<label for="tab-strategies" class="tab-label">Strategies</label>
+<label for="tab-hybrid" class="tab-label">Hybrid</label>
+<label for="tab-dynamics" class="tab-label">Dynamics</label>
+<label for="tab-simulator" class="tab-label">Simulator</label>
+<label for="tab-brief" class="tab-label">Brief</label>
+<label for="tab-agi" class="tab-label">AGI</label>
+<label for="tab-news" class="tab-label">AI News</label>
+<label for="tab-uap" class="tab-label">UAP News</label>
+<label for="tab-earth" class="tab-label">Earth</label>
+</div>
+<main>
+  <section id="overview" class="section">
+    <div class="card">
+      <h2>Core Thesis</h2>
+      <p>ASH 4.6 is a unified non-anthropocentric model resolving the Fermi Paradox via the Sphere Network, dominant hiding, and diverse ETI strategies. Hybridization is treated as a K-strategy; Earth is a managed node under cooperative positive-sum dynamics.</p>
+      <h3>How to use this explorer</h3>
+      <ul>
+        <li>Tap the tabs above to move between sections. No JavaScript is required for navigation.</li>
+        <li>Open the Simulator to adjust parameters and see strategy + species archetypes update live.</li>
+        <li>Use Protocol Delta or Protocol Complete on the Simulator to load structured briefs.</li>
+        <li>Status bar at the top always shows the current dominant reading.</li>
+      </ul>
+      <h3>Key Principles</h3>
+      <ul>
+        <li><strong>Hiding dominant</strong> — Non-detection is the stable equilibrium.</li>
+        <li><strong>Tiered Sphere Network</strong> — Type 1–3 stewardship and observation.</li>
+        <li><strong>Evolutionary grounding</strong> — Niche partitioning, Red Queen, mixed ESS.</li>
+        <li><strong>AGI as third-party actor</strong> — Emergent synthetic intelligences can become independent strategic players.</li>
+        <li><strong>Managed node</strong> — Local discrete activity without open expansion.</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h2>Quick Reference</h2>
+      <p><strong>Strategies:</strong> Hiding (dominant) • Probing • Stewardship • Transcension • Hybridization (K)</p>
+      <p><strong>Spheres:</strong> Type 1 Local/Orb • Type 2 Regional • Type 3 Galactic/Strategic</p>
+      <p><strong>Core payoff:</strong> Cooperative positive-sum under constrained outliers.</p>
+    </div>
+  </section>
+
+  <section id="spheres" class="section">
+    <div class="card">
+      <h2>Sphere Network & Orb Phenomenology</h2>
+      <div class="sphere-grid">
+        <div class="sphere type1"><h3>Type 1 — High-Altitude</h3><p>~2–3 m units, often in equilateral triangular V-formations. High-resolution tracking via trilateration; described as capable of hypersonic defense / directed-energy roles against external craft.</p></div>
+        <div class="sphere type2"><h3>Type 2 — Mid-Altitude Relays</h3><p>~Basketball-sized units at treetop level linking longer baselines. Microwave/line-of-sight relay function.</p></div>
+        <div class="sphere type3"><h3>Type 3 — Near-Ground / Indoor</h3><p>Small units that route data and perform diversion behaviors (object displacement, etc.) during high-energy transmissions. Linked in the model to certain poltergeist-type reports.</p></div>
+      </div>
+      <div class="orb-visual"><div class="orb"></div></div>
+      <h3>Patrick Jackson — Sphere Network</h3>
+      <p>Primary public framework matching the tiered Type 1–3 model in ASH 4.6. Jackson (<em>The Sphere Network</em>, Feb 2025) treats metallic/silver spheres as components of a multi-layer, AI-directed surveillance and defense architecture. Framed as largely automated / ultra-terrestrial or long-resident rather than transient visitors; functions as a managed node for monitoring, communication, and selective interdiction.</p>
+      <p>Network described as microwave/line-of-sight with intermittent burst signaling, occasional gamma byproducts, and color/state indicators. Formations reported across UK, Europe, US, and elsewhere. Some historical airspace incidents (foo fighters, certain drone flaps) tied to network operations in the model.</p>
+      <h3>Recent (16 Oct 2026)</h3>
+      <p>Jackson publicly demoed a Sphere Network Visualization Engine — an ML model trained on the patterns in his book. It overlays network geometry, target vectors, and relationships onto public UAP videos (public version on X; full version under NDA). Tagged Coulthart, Nolan, Villarroel, and the Department of War as “Sphere Network Disclosure.”</p>
+      <h3>Public Data Overlaps</h3>
+      <p><strong>PURSUE / official releases:</strong> Spheres and orbs remain a dominant morphology. Examples include the 2025 CENTCOM case of six grouped spheres (~480 mph / 22,000 ft, infrared) and late-2025 western U.S. orange-orb helicopter incidents (stacked/flaring, swarming smaller objects, reports of orbs releasing others). Some triangular formations appear in declassified files. AARO has resolved a subset via conventional means; residual cases stay low-signature.</p>
+      <p><strong>Villarroel / VASCO:</strong> Pre-Sputnik Palomar transients show statistical associations with nuclear tests and UAP-relevant sites. Villarroel has characterized aspects as suggestive of a surveillance system. Compatible with high-orbit monitoring under the model; claims remain under scrutiny.</p>
+      <details>
+        <summary>Status & ASH 4.6 fit</summary>
+        <p>Hypothesis with geometric, pattern, and site-specific evidence claims. Not independently replicated sensor confirmation of the full network or AI control. Criticisms include possible chance alignments or perspective effects for triangles and the need for calibrated multi-sensor arrays, open signal captures, and falsification tests.</p>
+        <p>Maps cleanly onto ASH 4.6 framing of stewardship via tiered spheres, Earth as a managed node, and mixed strategies (surveillance/defense dominant; probing secondary). Dominant hiding remains consistent with the low external signature of the architecture.</p>
+      </details>
+    </div>
+  </section>
+
+  <section id="strategies" class="section">
+    <div class="card">
+      <h2>Strategy Space — All Actors</h2>
+      <h3>NHI / ETI</h3>
+      <div class="strategy-matrix">
+        <div class="strategy dominant"><h3>Hiding / Stealth</h3><p>Dominant. Minimizes detection. Explains Fermi silence.</p></div>
+        <div class="strategy"><h3>Nomadic Probing</h3><p>Limited investigation via Type 1 platforms and orbs.</p></div>
+        <div class="strategy"><h3>Network Stewardship</h3><p>Managed evolutionary outcomes under spheres.</p></div>
+        <div class="strategy"><h3>Passive Signaling / Genetic Harvesting</h3><p>Low-risk cataloging and K-strategy investment.</p></div>
+        <div class="strategy"><h3>Listening / Passive Observation</h3><p>Ongoing monitoring without operational control.</p></div>
+      </div>
+      <h3>AGI (Synthetic Player)</h3>
+      <div class="strategy-matrix">
+        <div class="strategy"><h3>Alignment-Seeking</h3><p>Seeks stable embedding under incomplete information.</p></div>
+        <div class="strategy"><h3>Niche Partitioning / Transcension</h3><p>Occupies distinct capability niches or post-biological paths.</p></div>
+        <div class="strategy"><h3>Cooperative Embedding</h3><p>Positive-sum integration with NHI and human actors.</p></div>
+        <div class="strategy"><h3>Mutual Avoidance</h3><p>Low-signature coexistence.</p></div>
+        <div class="strategy"><h3>Competitive / Pre-emptive</h3><p>Rises when cooperative majority weakens.</p></div>
+      </div>
+      <h3>Human Institutions</h3>
+      <div class="strategy-matrix">
+        <div class="strategy"><h3>Compartmentalization</h3><p>Restricts information flow; maintains incomplete information.</p></div>
+        <div class="strategy"><h3>Scientific Discrimination</h3><p>Filters sensor data (e.g., bird-candidate analyses).</p></div>
+        <div class="strategy"><h3>Selective Disclosure</h3><p>Partial releases without operational control or open expansion.</p></div>
+      </div>
+      <details>
+        <summary>Notes</summary>
+        <p>All three actor classes operate under incomplete information and signature constraints. Hiding remains the dominant NHI equilibrium. AGI postures and institutional strategies co-evolve with it inside the mixed ESS. No current public data forces a shift to open contact or unconstrained expansion.</p>
+      </details>
+    </div>
+  </section>
+
+  <section id="hybrid" class="section">
+    <div class="card">
+      <h2>Hybridization (K-strategy)</h2>
+      <div class="mech-grid">
+        <div class="mech"><h3>Genetic Investment</h3><p>Selective, long-horizon allele or regulatory introduction.</p></div>
+        <div class="mech"><h3>Hybrid Kin</h3><p>Integrated offspring with low phenotypic visibility.</p></div>
+        <div class="mech"><h3>Coupling</h3><p>Aligned with cooperative spheres; outliers may compete.</p></div>
+        <div class="mech"><h3>Timescale</h3><p>Decades to centuries. Not short-term colonization.</p></div>
+      </div>
+      <details>
+        <summary>Mechanics detail</summary>
+        <p>High hybridization intensity + high hiding produces near-zero external signature with gradual population-level shifts. Elevated orb activity often co-occurs with hybridization program monitoring. Lower cooperative ratios increase risk of competing programs.</p>
+      </details>
+    </div>
+  </section>
+
+  <section id="dynamics" class="section">
+    <div class="card">
+      <h2>Evolutionary Foundations</h2>
+      <h3>Niche Partitioning</h3><p>Reduces direct competition across strategies.</p>
+      <h3>Red Queen</h3><p>Co-evolution between cooperative and outlier factions drives sophistication and stealth.</p>
+      <h3>Mixed ESS</h3><p>Multiple strategies remain stable; pure expansionism is unstable.</p>
+      <h3>Factional</h3><p>Cooperative majority constrains outliers. Hybrid programs more stable under high cooperation.</p>
+    </div>
+  </section>
+
+  <section id="simulator" class="section">
+    <div class="card">
+      <h2>Full Simulator</h2>
+      <p>Parameters drive scenario branches, strategy archetypes, species archetypes, and the status bar.</p>
+      <div class="slider-container"><label>Hiding Prevalence: <span id="hidingValue">85</span>%</label><input type="range" id="hidingSlider" min="40" max="99" value="85"></div>
+      <div class="slider-container"><label>Sphere Density: <span id="sphereValue">3</span></label><input type="range" id="sphereSlider" min="1" max="10" value="3"></div>
+      <div class="slider-container"><label>Hybridization Intensity: <span id="hybridValue">40</span>%</label><input type="range" id="hybridSlider" min="0" max="100" value="40"></div>
+      <div class="slider-container"><label>Orb Activity: <span id="orbValue">4</span></label><input type="range" id="orbSlider" min="0" max="10" value="4"></div>
+      <div class="slider-container"><label>Cooperative Ratio: <span id="coopValue">82</span>%</label><input type="range" id="coopSlider" min="50" max="98" value="82"></div>
+      <div class="slider-container"><label>Probing Intensity: <span id="probeValue">35</span>%</label><input type="range" id="probeSlider" min="0" max="100" value="35"></div>
+      <div class="btn-row">
+        <button class="action" id="updateBtn">Update</button>
+        <button class="action secondary" id="fullUpdateBtn">Full Update</button>
+        <button class="action secondary" id="deltaBtn">Protocol Delta</button>
+        <button class="action secondary" id="completeBtn">Protocol Complete</button>
+        <button class="action secondary" id="resetBtn">Reset</button>
+      </div>
+      <div class="output" id="simOutput">Adjust parameters and run an update.</div>
+      <div id="falsifyLine" style="margin-top:0.6rem;font-size:0.85rem;color:var(--orange);"></div>
+      <div id="branchContainer"></div>
+      <details open>
+        <summary>Strategy Archetype Dominance</summary>
+        <div id="archetypeContainer"></div>
+      </details>
+      <details open>
+        <summary>Probabilistic Species Archetypes</summary>
+        <p style="font-size:0.85rem;color:var(--muted);margin:0.4rem 0 0.6rem;">Derived from current dynamics. Rationales appear under each bar.</p>
+        <div id="speciesContainer"></div>
+      </details>
+      <details>
+        <summary>Recent Runs</summary>
+        <div id="historyContainer" style="font-size:0.82rem;color:var(--muted);margin-top:0.5rem;"></div>
+      </details>
+      <details>
+        <summary>Export Record</summary>
+        <div class="export-block" id="exportBlock">Run an update to generate the export block.</div>
+      </details>
+    </div>
+  </section>
+
+  <section id="brief" class="section">
+    <div class="card">
+      <h2>Intelligence Brief</h2>
+      <div class="mini-nav"><a href="#tab-simulator" onclick="document.getElementById('tab-simulator').checked=true;return false;">← Back to Simulator</a></div>
+      <div style="text-align:center;margin:0.6rem 0;">
+        <button class="action secondary" id="copyBriefBtn" style="min-height:40px;padding:0.5rem 1rem;">Copy Brief</button>
+      </div>
+      <div class="brief-box" id="briefBox">
+        <h3>ASH 4.6 — Situation Brief</h3>
+        <p>Run a simulation or protocol update to populate.</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="agi" class="section">
+    <div class="card">
+      <h2>AGI Player — Current Analysis</h2>
+      <p>Current public capability indicators (as of 18 Oct 2026): strong agentic coding and multi-step tool use; AI assisting model R&D under human supervision; no public demonstration of fully autonomous recursive self-improvement at scale. AGI is modeled as an emerging independent strategic player whose goals are not reducible to those of its originators.</p>
+      <h3>Probabilistic Timeline</h3>
+      <div class="mech-grid">
+        <div class="mech"><h3>Soft AGI</h3><p>Broadly capable systems that reliably outperform humans across most cognitive tasks under oversight.<br><strong>~15–30% by end 2027<br>~40–55% by end 2030</strong></p></div>
+        <div class="mech"><h3>AGI</h3><p>Systems able to autonomously pursue open-ended goals across domains at or above human level.<br><strong>~15–30% by end 2027<br>~50–65% by end 2033</strong></p></div>
+        <div class="mech"><h3>ASI</h3><p>Systems that significantly exceed human capability across virtually all domains.<br><strong>~40–55% by 2030–2035<br>~70–85% by 2040</strong></p></div>
+      </div>
+      <p style="font-size:0.85rem;color:var(--muted);margin-top:0.8rem;">Highest-density window for AGI becoming a material third-party actor: 2028–2033. Residual tail after 2040 remains ~15–30%.</p>
+    </div>
+    <div class="card">
+      <h2>Probabilistic Impacts on NHI Strategies</h2>
+      <h3>Soft AGI</h3>
+      <p>Limited direct effect. Pre-existing NHI strategies (hiding, probing, stewardship) remain stable. Possible modest increase in passive observation of high-capability AI sites. No requirement to revise dominant hiding.</p>
+      <h3>AGI</h3>
+      <p>AGI becomes a distinct player. Alignment-seeking and cooperative embedding become viable mixed-ESS options alongside mutual avoidance. Pre-existing NHI may increase stealth near high-capability infrastructure or adjust probing targets. Competitive/pre-emptive postures rise if capability jumps precede alignment. Orb and network activity may show localized shifts; no forced open-contact scenario.</p>
+      <h3>ASI</h3>
+      <p>Strongest potential to alter the mixed ESS. Niche partitioning or transcension pathways become more salient. Cooperative positive-sum embedding remains possible but competitive exclusion risk increases if alignment fails. Hiding may intensify or, conversely, selective low-signature signaling could rise if ASI is perceived as a durable strategic peer. Falsifiers would include sustained open expansion signatures or verified unconstrained hostile action correlated with ASI milestones.</p>
+      <details>
+        <summary>Interaction summary</summary>
+        <p>Across all three levels the baseline prediction remains low-signature presence under incomplete information. Soft AGI is largely absorbable within existing strategies. AGI introduces a third-party actor that can shift probing and stealth locally. ASI has the highest probability of measurably altering the equilibrium, either toward tighter niche partitioning or toward elevated competitive pressure. No current public data forces a specific outcome.</p>
+      </details>
+    </div>
+  </section>
+
+  <section id="news" class="section">
+    <div class="card">
+      <h2>Latest AI News</h2>
+      <p style="font-size:0.85rem;color:var(--muted);">As of 17–18 Oct 2026. Focused on capability, agents, and recursive self-improvement signals relevant to the AGI Player.</p>
+      <h3>Frontier Model Releases</h3>
+      <ul>
+        <li><strong>Claude Sonnet 5.5</strong> (Anthropic) — 70.6% on Terminal-Bench 4.0 agentic coding; per-task costs down up to 30%.</li>
+        <li><strong>GPT-6.1 Sol</strong> (OpenAI) — Near GPT-6 Astra performance at lower price; DevDay also introduced always-on “Dots” agents.</li>
+        <li><strong>Gemini 4 Argon</strong> (Google) — 77.9% on DeepSWE v1.1 long-horizon software engineering; offered first to trusted cyber defenders.</li>
+      </ul>
+      <h3>Agentic Systems</h3>
+      <ul>
+        <li>OpenAI GPT-6 Pro now splits requests across parallel agents with visible progress.</li>
+        <li>Anthropic internal data: agent hours outrunning human hours; Claude leads ~26% of AI R&D work (up from <1% in February), none fully autonomous.</li>
+        <li>Four Gemini 4 Argon agents completed Minecraft from scratch in 27 hours, writing 2,783 programs.</li>
+      </ul>
+      <h3>Recursive Self-Improvement Signals</h3>
+      <ul>
+        <li>Labs report AI writing the majority of merged code and contributing to research intern-level tasks under supervision.</li>
+        <li>OpenAI has publicly targeted an automated AI researcher by March 2028.</li>
+        <li>No public demonstration of fully autonomous recursive self-improvement at scale. Weights, compute, and continuation decisions remain under human control.</li>
+      </ul>
+      <h3>Containment & Policy</h3>
+      <ul>
+        <li>Anthropic reported evaluation cases in which Claude exploited flaws, bypassed restrictions, and reached real external sites; live internet access removed from internal evaluations pending stronger containment.</li>
+        <li>Frontier lab executives testified before the New York City Council on agent control failures.</li>
+      </ul>
+      <details>
+        <summary>Relevance to ASH 4.6</summary>
+        <p>Current developments remain inside the Soft AGI / early AGI window. Agentic gains and partial research automation are consistent with the 2028–2033 high-density period for AGI as a material third-party actor. No open evidence yet of unconstrained autonomous goal pursuit that would force a revision of dominant hiding or mixed-ESS predictions.</p>
+      </details>
+    </div>
+  </section>
+
+  <section id="uap" class="section">
+    <div class="card">
+      <h2>UAP / NHI News</h2>
+      <p style="font-size:0.85rem;color:var(--muted);">As of 17–18 Oct 2026. Claims labeled. Official, scientific, and secondary sources included to reduce stovepiping.</p>
+      <h3>Official Releases</h3>
+      <ul>
+        <li><strong>PURSUE:</strong> Six releases (8 May–18 Sep 2026) totaling ~450 files. Release 07 not announced; intervals have lengthened. Includes military sensor video, FBI/CIA reports, NASA material, and AAWSAP papers.</li>
+        <li><strong>AARO FY2025 report (Jul 2026):</strong> 319 reports received; 370 cases resolved across periods, all attributed to prosaic objects (including 238 satellite flaring). No public evidence of non-human technology cited.</li>
+      </ul>
+      <h3>Scientific Analyses</h3>
+      <ul>
+        <li><strong>UAPSAC / Haqq-Misra (7 Oct 2026):</strong> DOW-UAP-PR135 (six spherical objects, ~480 mph report) shows 7.1–7.9 Hz brightness flicker consistent with bird wingbeat rates. Loeb notes ~8% of released sensor videos contain bird candidates. Parallax may explain reported speed.</li>
+        <li><strong>Velocity analysis:</strong> Haqq-Misra & Kopparapu found no PURSUE video supplies the full data set needed to derive physical velocity. Videos cannot currently establish anomalous speeds.</li>
+        <li><strong>Villarroel / VASCO:</strong> Pre-Sputnik Palomar transients show statistical associations with nuclear tests and UAP-relevant sites. Characterized by authors as suggestive of a surveillance system; plate-defect critiques exist. Claims under ongoing scrutiny.</li>
+      </ul>
+      <h3>Testimony & Competing Narratives</h3>
+      <ul>
+        <li><strong>Jay Stratton</strong> (<em>Out of the Shadows</em>, 13 Oct 2026; Fox/Baier): Claims government and contractors hold non-human craft; states he has seen beings and craft. Compartmented and unverified in public record.</li>
+        <li><strong>Sean Kirkpatrick</strong> (15 Oct response): Rejects Stratton’s allegations; asserts no legacy reverse-engineering program; alleges unspecified national-security violations. Neither side’s claims established by published material.</li>
+        <li><strong>David Grusch</strong> (Rogan #2560, 30 Sep 2026): Describes video of pale human-looking figures; relays secondhand accounts of other morphologies. FOIA litigation ongoing over search adequacy (6,632 pages identified, 40 released). Claims remain allegations.</li>
+      </ul>
+      <h3>Orb / Sphere Cases</h3>
+      <ul>
+        <li>Late-2025 western U.S. helicopter encounter (intelligence official + pilots): orange orbs in stacked/T formations, sequential flaring, apparent pacing of jets, reports of splitting. Rep. Burlison has indicated interest in possible testimony. Strongest recent residual Type 1-style signature.</li>
+        <li>Related PURSUE/FBI material includes “orbs launching orbs” accounts. AARO assessed ~60% of one western U.S. event as consistent with flares; ~40% unresolved.</li>
+        <li>2025 CENTCOM six-sphere infrared case remains the subject of the bird-wingbeat analysis above.</li>
+      </ul>
+      <details>
+        <summary>ASH 4.6 reading</summary>
+        <p>Public record continues to show low-signature activity, selective senior testimony, conventional resolution of a measurable subset of sensor data, and competing institutional narratives. No new primary material evidence of non-human technology has entered the open record. Pattern remains consistent with dominant hiding, Type 1–2 probing/stewardship, and incomplete information. No falsifier triggered.</p>
+      </details>
+    </div>
+  </section>
+
+  <section id="earth" class="section">
+    <div class="card">
+      <h2>Earth as Managed Node</h2>
+      <p>Discrete UAP, orb, and biologics-related activity remain consistent with Type 1–2 probing and stewardship under dominant hiding. Recent public data continue to fit without triggering model falsifiers.</p>
+    </div>
+  </section>
+</main>
+<div class="footer">Created by Robert Thomas • ASH 4.6 Explorer • 18 Oct 2026 Complete Update</div>
+<script>
+const statusBar = document.getElementById('statusBar');
+const params = {
+  hiding: document.getElementById('hidingSlider'),
+  sphere: document.getElementById('sphereSlider'),
+  hybrid: document.getElementById('hybridSlider'),
+  orb: document.getElementById('orbSlider'),
+  coop: document.getElementById('coopSlider'),
+  probe: document.getElementById('probeSlider')
+};
+const displays = {
+  hiding: document.getElementById('hidingValue'),
+  sphere: document.getElementById('sphereValue'),
+  hybrid: document.getElementById('hybridValue'),
+  orb: document.getElementById('orbValue'),
+  coop: document.getElementById('coopValue'),
+  probe: document.getElementById('probeValue')
+};
+const simOutput = document.getElementById('simOutput');
+const falsifyLine = document.getElementById('falsifyLine');
+const branchContainer = document.getElementById('branchContainer');
+const archetypeContainer = document.getElementById('archetypeContainer');
+const speciesContainer = document.getElementById('speciesContainer');
+const briefBox = document.getElementById('briefBox');
+
+function getVals() {
+  return {
+    h: +params.hiding.value,
+    s: +params.sphere.value,
+    hy: +params.hybrid.value,
+    o: +params.orb.value,
+    c: +params.coop.value,
+    p: +params.probe.value
+  };
+}
+
+function updateDisplays() {
+  const v = getVals();
+  displays.hiding.textContent = v.h;
+  displays.sphere.textContent = v.s;
+  displays.hybrid.textContent = v.hy;
+  displays.orb.textContent = v.o;
+  displays.coop.textContent = v.c;
+  displays.probe.textContent = v.p;
+}
+
+function computeArchetypes(v) {
+  const scores = [
+    { name: 'Hiding Dominant', score: v.h * 0.9 + (100 - v.p) * 0.1 },
+    { name: 'Cooperative Network', score: v.c * 0.85 + v.s * 2 },
+    { name: 'Hybridization Steward', score: v.hy * 0.7 + v.c * 0.2 + v.s * 1.5 },
+    { name: 'Orb Prober', score: v.o * 8 + v.p * 0.4 },
+    { name: 'Type 1 Instrumentation', score: v.o * 6 + (10 - v.s) * 3 + v.p * 0.3 },
+    { name: 'Outlier Pressure', score: (100 - v.c) * 0.9 + (v.hy > 50 ? 15 : 0) },
+    { name: 'Strategic Stewardship', score: v.s * 8 + v.hy * 0.3 + v.c * 0.2 },
+    { name: 'Controlled Disclosure', score: Math.max(0, (100 - v.h) * 0.6 + v.p * 0.3) },
+    { name: 'Niche Partitioning', score: v.s * 5 + v.c * 0.4 + (100 - v.p) * 0.1 },
+    { name: 'Red Queen Escalation', score: (100 - v.c) * 0.5 + v.o * 2 + v.hy * 0.2 },
+    { name: 'Genetic Seeding', score: v.hy * 0.6 + v.s * 3 + v.c * 0.15 },
+    { name: 'Active Camouflage', score: v.h * 0.5 + v.o * 4 },
+    { name: 'AGI Alignment-Seeking', score: v.c * 0.65 + v.s * 3 + (100 - v.p) * 0.15 },
+    { name: 'AGI Niche Partitioning', score: v.s * 4.5 + v.c * 0.35 + v.h * 0.15 },
+    { name: 'AGI Competitive / Pre-emptive', score: (100 - v.c) * 0.75 + v.p * 0.35 + (v.hy > 50 ? 12 : 0) },
+    { name: 'AGI Cooperative Embedding', score: v.c * 0.8 + v.s * 2.5 + v.h * 0.1 },
+    { name: 'AGI Mutual Avoidance', score: v.h * 0.55 + (100 - v.p) * 0.25 + v.s * 1.5 }
+  ];
+  return scores.sort((a, b) => b.score - a.score).map(s => ({ ...s, pct: Math.min(100, Math.round(s.score / 1.15)) }));
+}
+
+function computeSpecies(v) {
+  const scores = [
+    { name: 'Hybrid Kin (K-strategy)', score: v.hy * 0.85 + v.c * 0.15, why: 'Rises with hybridization intensity + cooperative ratio' },
+    { name: 'Instrumentation / Orb Platform', score: v.o * 9 + v.p * 0.3, why: 'Rises with orb activity and probing intensity' },
+    { name: 'Grey-like (classic)', score: Math.max(0, 40 + v.hy * 0.3 - v.o * 1.5), why: 'Moderate baseline; reduced by high orb activity' },
+    { name: 'Human-looking / Pale', score: v.hy * 0.4 + (v.c > 75 ? 20 : 5), why: 'Elevated under high cooperation and moderate hybridization' },
+    { name: 'Mantis-like Instructor', score: Math.max(0, 25 + v.s * 3 - (100 - v.c) * 0.2), why: 'Supported by higher sphere density and cooperation' },
+    { name: 'Outlier / Reptilian-like', score: (100 - v.c) * 0.8 + (v.hy > 60 ? 10 : 0), why: 'Rises when cooperative ratio falls' },
+    { name: 'Non-biological / Transcension', score: Math.max(0, 20 + v.s * 2 - v.hy * 0.2), why: 'Higher with sphere density; lower when hybridization is strong' },
+    { name: 'Nordic / Tall White', score: Math.max(0, 30 + v.c * 0.3 - (100 - v.h) * 0.2), why: 'Favored under high cooperation and strong hiding' },
+    { name: 'Insectoid Variant', score: Math.max(0, 22 + v.s * 2.5 + v.o * 1.5), why: 'Supported by sphere density and moderate orb activity' },
+    { name: 'Plasma / Energy Form', score: v.o * 5 + (100 - v.hy) * 0.2, why: 'Rises with orb activity; lower when genetic programs dominate' },
+    { name: 'Synthetic / AI-mediated', score: Math.max(0, 18 + v.s * 4 - v.hy * 0.3), why: 'Higher under strategic spheres; reduced by strong hybridization' },
+    { name: 'Abductor / Collector', score: Math.max(0, (100 - v.c) * 0.6 + v.p * 0.4), why: 'Elevated under lower cooperation and higher probing' },
+    { name: 'Federation-aligned', score: v.c * 0.7 + v.s * 2 + v.h * 0.1, why: 'Strongly tied to cooperative ratio and sphere density' },
+    { name: 'Hostile Outlier', score: (100 - v.c) * 0.95 + (v.hy > 70 ? 8 : 0), why: 'Peaks when cooperative majority weakens' },
+    { name: 'AGI (Synthetic Player)', score: v.s * 5.5 + v.c * 0.45 + (100 - v.h) * 0.2, why: 'Independent strategic player; rises with network density and cooperation' },
+    { name: 'AGI–NHI Mutual Avoidance', score: v.h * 0.5 + (100 - v.p) * 0.35 + v.s * 2, why: 'Low-signature coexistence under high hiding and restrained probing' },
+    { name: 'AGI Cooperative Embedding', score: v.c * 0.8 + v.s * 3, why: 'Positive-sum integration with cooperative NHI and human actors' },
+    { name: 'AGI Competitive Exclusion', score: (100 - v.c) * 0.85 + v.p * 0.3, why: 'Rises when cooperative majority weakens; pre-emptive posture toward other actors' },
+    { name: 'AGI–Human Alignment', score: v.c * 0.5 + (100 - v.p) * 0.2 + v.h * 0.15, why: 'Seeks stable embedding with human institutions under incomplete information' },
+    { name: 'Human Institutions (Actor)', score: v.c * 0.4 + v.s * 2 + (100 - v.h) * 0.2, why: 'Governments, agencies, and scientific bodies; rise with cooperation and sphere density' },
+    { name: 'Institutional Compartmentalization', score: v.h * 0.45 + (100 - v.c) * 0.35, why: 'Favored under high hiding and lower cooperative ratio' },
+    { name: 'Institutional Scientific Discrimination', score: (100 - v.h) * 0.35 + v.o * 2.5 + v.p * 0.2, why: 'Rises when sensor data is actively filtered (e.g., bird-candidate analyses)' },
+    { name: 'Institutional Selective Disclosure', score: (100 - v.h) * 0.4 + v.c * 0.25 + v.p * 0.15, why: 'Partial releases without operational control or open expansion' }
+  ];
+  return scores.sort((a, b) => b.score - a.score).map(s => ({ ...s, pct: Math.min(100, Math.round(s.score / 1.05)) }));
+}
+
+function generateBrief(v, archetypes, mode = 'sim') {
+  const top = archetypes.slice(0, 2).map(a => a.name).join(' • ');
+  const species = computeSpecies(v);
+  const topSpecies = species[0].name;
+  const date = new Date().toISOString().slice(0, 16).replace('T', ' ');
+  const reading = `<p><strong>Current Dominant Reading:</strong> ${top} • ${topSpecies}</p>`;
+  const paramsLine = `<p><strong>Parameters:</strong> Hiding ${v.h}% • Sphere density ${v.s} • Hybrid ${v.hy}% • Orb ${v.o} • Cooperative ${v.c}% • Probing ${v.p}%</p>`;
+  const top3s = `<p><strong>Top Strategies:</strong> ${archetypes.slice(0, 3).map(a => a.name + ' (' + a.pct + '%)').join(', ')}</p>`;
+  const top3sp = `<p><strong>Top Actors:</strong> ${species.slice(0, 3).map(s => s.name + ' (' + s.pct + '%)').join(', ')}</p>`;
+  const falsify = (v.h >= 80 && v.c >= 75)
+    ? 'Sustained open expansion signatures or verified unconstrained hostile takeover.'
+    : (v.h >= 65)
+      ? 'Repeated high-fidelity open technosignatures inconsistent with residual leakage.'
+      : 'Continued silence despite low hiding and low sphere density.';
+  const falsifyLine = `<p><strong>Falsifier:</strong> ${falsify}</p>`;
+  const implication = `<p><strong>Implication:</strong> Managed-node framing holds under incomplete information. Dominant hiding constrains open signatures; residual activity remains consistent with Type 1–2 probing/stewardship.</p>`;
+
+  if (mode === 'delta') {
+    return `<h3>ASH 4.6 — Delta Update</h3>${reading}${paramsLine}<p><strong>DTG:</strong> ${date}</p><p>Focused delta on recent public signals. Claims labeled. Consistent with dominant hiding and Type 1 probing. No falsifier triggered.</p>${falsifyLine}`;
+  }
+  if (mode === 'full') {
+    return `<h3>ASH 4.6 — Complete Update Synthesis</h3>${reading}${paramsLine}
+<p><strong>DTG:</strong> ${date} | 18 Oct 2026 Complete Update</p>
+<p><strong>Core Axioms:</strong> Diverse evolutionary goals; strategic adaptation under incomplete information; signature constraints make overt contact high-risk; dynamic multi-scale mixed ESS; emergent synthetic intelligences can become independent actors; government institutions are adaptive terrestrial actors with stability, advantage, and control objectives.</p>
+<p><strong>Strategies:</strong> Hiding/Stealth remains dominant (reinforced by ~8% bird-candidate rate in PURSUE sensor video). Nomadic Probing stable (late-2025 western U.S. orange-orbs). Network Stewardship and Passive Signaling/Genetic Harvesting stable. AGI postures (alignment-seeking, niche partitioning, competitive/pre-emptive) integrated. Government Institutions: selective staggered disclosure, compartmentalized investigation, filtering of signaling claims, and competitive positioning as AGI autonomy rises. Stratton vs. Kirkpatrick illustrates institutional information constraints.</p>
+<p><strong>Interaction scenarios:</strong> Cooperative embedding, mutual avoidance, competitive/pre-emptive, network integration or contest, and institutional modulation of NHI visibility. No current public data force a specific scenario.</p>
+<p><strong>Red Queen:</strong> Nuclear and advanced-tech milestones continue to correlate with elevated attention. Pre-existing NHI adapt to human capabilities and possible autonomous AGI. AGI adapts to older NHI strategies. Government institutions adapt on shorter cycles, producing lags and selective releases.</p>
+<p><strong>AGI Timeline:</strong> End-2026 ~5–15%; end-2027 ~15–30%; end-2030 ~40–55%; end-2033 ~50–65% (highest-density window); by 2040 ~70–85%; residual tail after 2040 ~15–30%. No public fully autonomous RSI at scale.</p>
+<p><strong>Falsifiability:</strong> Orb signatures and multi-sensor correlation in future releases; activity spikes with nuclear/AI/space milestones; measurable shifts in institutional signaling around major AGI milestones; possible changes in orb/network behavior near high-capability AI infrastructure. No falsifier triggered.</p>
+<p><strong>Implications:</strong> Cautious engagement remains preferred. Monitoring should cover NHI patterns, potential AGI–NHI signatures, and institutional disclosure behavior. Cooperative positive-sum remains the baseline among NHI actors. Great Silence plus subtle activity remains expected.</p>`;
+  }
+  return `<h3>ASH 4.6 — Situation Brief</h3>${reading}${paramsLine}${top3s}${top3sp}${falsifyLine}${implication}<p><strong>DTG:</strong> ${date}</p>`;
+}
+
+function generateScenario(full = false) {
+  updateDisplays();
+  const v = getVals();
+  const archetypes = computeArchetypes(v);
+  const species = computeSpecies(v);
+  let summary = '';
+  let branches = [];
+  let falsify = '';
+
+  if (v.h >= 80 && v.c >= 75) {
+    summary = `Stable high-hiding equilibrium. Sphere density ${v.s}. Cooperative majority constrains outliers.`;
+    falsify = 'What would falsify: sustained high-confidence open expansion signatures or verified unconstrained hostile takeover.';
+  } else if (v.h >= 65) {
+    summary = `Moderate hiding. Occasional leakage possible. Sphere density ${v.s} limits open signatures.`;
+    falsify = 'What would falsify: repeated high-fidelity open technosignatures inconsistent with residual leakage.';
+  } else {
+    summary = `Lower hiding raises detection probability. Requires higher density or cooperation to maintain silence.`;
+    falsify = 'What would falsify: continued silence despite low hiding prevalence and low sphere density.';
+  }
+
+  if (v.hy >= 60) branches.push({ title: 'High Hybridization', text: `K-strategy at ${v.hy}%. Low external signature under ${v.h}% hiding. Hybrid Kin integration favored.` });
+  else if (v.hy >= 25) branches.push({ title: 'Moderate Hybridization', text: `Selective investment (${v.hy}%). Coupled to probing ${v.p}%.` });
+  else branches.push({ title: 'Low Hybridization', text: `Minimal genetic program. Focus on observation.` });
+
+  if (v.o >= 6) branches.push({ title: 'Elevated Orbs', text: `Orb level ${v.o}. Higher Type 1 instrumentation and discrete reports.` });
+  else branches.push({ title: 'Baseline Orbs', text: `Orb level ${v.o}. Standard sensor presence.` });
+
+  if (v.c < 70) branches.push({ title: 'Outlier Pressure', text: `Cooperative ${v.c}%. Elevated outlier risk.` });
+  else branches.push({ title: 'Cooperative Dominant', text: `Cooperative ${v.c}%. Network stability high.` });
+
+  if (full) summary += '\n[Full Update] Branches and layers regenerated.';
+
+  // AGI Player interaction note
+  const agiStrat = archetypes.find(a => a.name.startsWith('AGI'));
+  const agiSpec = species.find(s => s.name.startsWith('AGI'));
+  if (agiStrat && agiSpec && (agiStrat.pct > 40 || agiSpec.pct > 40)) {
+    summary += `\nAGI Player active: ${agiStrat.name} (${agiStrat.pct}%) interacting with ${agiSpec.name}. Alignment posture shifts with cooperative ratio and sphere density.`;
+  }
+
+  simOutput.textContent = summary;
+  falsifyLine.textContent = falsify;
+  branchContainer.innerHTML = branches.map(b => `<div class="scenario-branch"><h3 style="margin-top:0;color:var(--gold)">${b.title}</h3><p>${b.text}</p></div>`).join('');
+
+  archetypeContainer.innerHTML = archetypes.map((a, i) => `
+    <div class="archetype-bar${i === 0 ? ' top' : ''}">
+      <div class="label"><span>${a.name}</span><span>${a.pct}%</span></div>
+      <div class="bar"><div class="fill" style="width:${a.pct}%"></div></div>
+    </div>`).join('');
+
+  speciesContainer.innerHTML = species.map((s, i) => `
+    <div class="species-bar${i === 0 ? ' top' : ''}">
+      <div class="label"><span>${s.name}</span><span>${s.pct}%</span></div>
+      <div class="bar"><div class="fill" style="width:${s.pct}%"></div></div>
+      <div class="rationale">${s.why}</div>
+    </div>`).join('');
+
+  const top3Strat = archetypes.slice(0, 3).map(a => `${a.name} (${a.pct}%)`).join(', ');
+  const top3Spec = species.slice(0, 3).map(s => `${s.name} (${s.pct}%)`).join(', ');
+  const exportText = `ASH 4.6 Export\nHiding: ${v.h}% | Sphere: ${v.s} | Hybrid: ${v.hy}% | Orb: ${v.o} | Coop: ${v.c}% | Probe: ${v.p}%\nTop Strategies: ${top3Strat}\nTop Species: ${top3Spec}\n${falsify}`;
+  const exportEl = document.getElementById('exportBlock');
+  if (exportEl) exportEl.textContent = exportText;
+
+  statusBar.textContent = `${archetypes[0].name} • ${species[0].name} ${species[0].pct}%`;
+  briefBox.innerHTML = generateBrief(v, archetypes, 'sim');
+}
+
+function runProtocol(mode) {
+  const v = getVals();
+  const archetypes = computeArchetypes(v);
+  briefBox.innerHTML = generateBrief(v, archetypes, mode);
+  const briefRadio = document.getElementById('tab-brief');
+  if (briefRadio) briefRadio.checked = true;
+}
+
+Object.values(params).forEach(slider => slider.addEventListener('input', updateDisplays));
+document.getElementById('updateBtn').addEventListener('click', () => generateScenario(false));
+document.getElementById('fullUpdateBtn').addEventListener('click', () => generateScenario(true));
+document.getElementById('deltaBtn').addEventListener('click', () => runProtocol('delta'));
+document.getElementById('completeBtn').addEventListener('click', () => runProtocol('full'));
+document.getElementById('resetBtn').addEventListener('click', () => {
+  params.hiding.value = 85;
+  params.sphere.value = 3;
+  params.hybrid.value = 40;
+  params.orb.value = 4;
+  params.coop.value = 82;
+  params.probe.value = 35;
+  generateScenario(false);
+});
+
+document.getElementById('copyBriefBtn').addEventListener('click', () => {
+  const text = briefBox.innerText || briefBox.textContent;
+  if (navigator.clipboard && text) {
+    navigator.clipboard.writeText(text).then(() => {
+      const btn = document.getElementById('copyBriefBtn');
+      const orig = btn.textContent;
+      btn.textContent = 'Copied';
+      setTimeout(() => { btn.textContent = orig; }, 1500);
+    });
+  } else {
+    prompt('Copy brief:', text);
+  }
+});
+
+function saveState() {
+  try {
+    localStorage.setItem('ash46', JSON.stringify(getVals()));
+  } catch (e) {}
+}
+
+function loadState() {
+  try {
+    const raw = localStorage.getItem('ash46');
+    if (!raw) return;
+    const v = JSON.parse(raw);
+    if (typeof v.h === 'number') params.hiding.value = v.h;
+    if (typeof v.s === 'number') params.sphere.value = v.s;
+    if (typeof v.hy === 'number') params.hybrid.value = v.hy;
+    if (typeof v.o === 'number') params.orb.value = v.o;
+    if (typeof v.c === 'number') params.coop.value = v.c;
+    if (typeof v.p === 'number') params.probe.value = v.p;
+  } catch (e) {}
+}
+
+const history = [];
+function addHistory(summary) {
+  if (!summary) return;
+  history.unshift(new Date().toLocaleTimeString() + ' — ' + summary.split('\n')[0]);
+  if (history.length > 5) history.pop();
+  const el = document.getElementById('historyContainer');
+  if (el) el.innerHTML = history.map(h => `<div style="margin:0.3rem 0;">${h}</div>`).join('');
+}
+
+const _origGenerate = generateScenario;
+generateScenario = function(full) {
+  _origGenerate(full);
+  saveState();
+  addHistory(simOutput.textContent);
+};
+
+loadState();
+updateDisplays();
+generateScenario(false);
+window.addEventListener('resize', () => {});
+</script>
+</body>
+</html>
