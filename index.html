@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>ASH 4.6 Explorer</title>
+<title>ASH Explorer</title>
 <style>
 :root {
   --bg: #0a0e17;
@@ -66,6 +66,7 @@ h1 {
   user-select: none;
   -webkit-user-select: none;
 }
+.tab-label.brief { min-width: 140px; flex: 2 1 auto; text-align: center; }
 #tab-overview:checked ~ .nav-tabs label[for="tab-overview"],
 #tab-spheres:checked ~ .nav-tabs label[for="tab-spheres"],
 #tab-strategies:checked ~ .nav-tabs label[for="tab-strategies"],
@@ -76,6 +77,7 @@ h1 {
 #tab-brief:checked ~ .nav-tabs label[for="tab-brief"],
 #tab-brief:checked ~ .nav-tabs label[for="tab-brief"],
 #tab-agi:checked ~ .nav-tabs label[for="tab-agi"],
+#tab-nhi:checked ~ .nav-tabs label[for="tab-nhi"],
 #tab-news:checked ~ .nav-tabs label[for="tab-news"],
 #tab-uap:checked ~ .nav-tabs label[for="tab-uap"],
 #tab-earth:checked ~ .nav-tabs label[for="tab-earth"] {
@@ -94,6 +96,7 @@ h1 {
 #tab-brief:checked ~ main #brief,
 #tab-brief:checked ~ main #brief,
 #tab-agi:checked ~ main #agi,
+#tab-nhi:checked ~ main #nhi,
 #tab-news:checked ~ main #news,
 #tab-uap:checked ~ main #uap,
 #tab-earth:checked ~ main #earth { display: block; }
@@ -182,7 +185,7 @@ button.action.secondary { background: transparent; color: var(--accent); border:
 </head>
 <body>
 <header>
-  <h1>ADAPTIVE STRATEGY HYPOTHESIS 4.6</h1>
+  <h1>ADAPTIVE STRATEGY HYPOTHESIS</h1>
   <p class="subtitle">Created by Robert Thomas • 26 Oct 2026 Complete Update</p>
 </header>
 <div class="status-bar" id="statusBar">Hiding Dominant • Hybrid Kin —</div>
@@ -195,18 +198,20 @@ button.action.secondary { background: transparent; color: var(--accent); border:
 <input type="radio" name="tabs" id="tab-brief" class="tab-radio">
 <input type="radio" name="tabs" id="tab-brief" class="tab-radio">
 <input type="radio" name="tabs" id="tab-agi" class="tab-radio">
+<input type="radio" name="tabs" id="tab-nhi" class="tab-radio">
 <input type="radio" name="tabs" id="tab-news" class="tab-radio">
 <input type="radio" name="tabs" id="tab-uap" class="tab-radio">
 <input type="radio" name="tabs" id="tab-earth" class="tab-radio">
 <div class="nav-tabs" style="display:flex;justify-content:center;flex-wrap:wrap;gap:0.45rem;padding:0.7rem 0.5rem;background:var(--panel);position:sticky;top:0;z-index:20;border-bottom:1px solid var(--border);">
 <label for="tab-overview" class="tab-label">Overview</label>
+<label for="tab-brief" class="tab-label brief">Brief</label>
 <label for="tab-spheres" class="tab-label">Spheres</label>
 <label for="tab-strategies" class="tab-label">Strategies</label>
 <label for="tab-hybrid" class="tab-label">Hybrid</label>
 <label for="tab-dynamics" class="tab-label">Dynamics</label>
 <label for="tab-simulator" class="tab-label">Simulator</label>
-<label for="tab-brief" class="tab-label">Brief</label>
 <label for="tab-agi" class="tab-label">AGI</label>
+<label for="tab-nhi" class="tab-label">NHI</label>
 <label for="tab-news" class="tab-label">AI News</label>
 <label for="tab-uap" class="tab-label">UAP News</label>
 <label for="tab-earth" class="tab-label">Earth</label>
@@ -285,11 +290,79 @@ button.action.secondary { background: transparent; color: var(--accent); border:
         </ul>
       </details>
       <p style="font-size:0.85rem;color:var(--muted);margin-top:0.6rem;">These tools are the analytical basis for the strategy portfolio, interaction scenarios, unified snapshots, falsifiability conditions, and the most/least probable and most/least dangerous assessments shown in each consolidated update.</p>
-      <h3>How to use this explorer</h3>
+      <h3>Analytical Toolkit</h3>
+      <p>The following techniques form the standing multi-population analytical toolkit. They are applied during full updates (and when strategies are re-examined) to the latest data, historical layer, AGI timelines, and actor-class interactions. Not every technique is re-run from zero on every delta update if the data do not change the relevant equilibria; all remain available and are invoked as the data warrant.</p>
+      <details>
+        <summary>Core Evolutionary Game Theory</summary>
+        <ul>
+          <li>Multi-population replicator dynamics</li>
+          <li>Stochastic stability (including selection among equilibria under noise)</li>
+          <li>Evolutionary stable strategies (ESS) identification across pre-existing NHI, multiple AGI populations, and government institutions</li>
+        </ul>
+      </details>
+      <details>
+        <summary>Incomplete-Information and Belief Dynamics</summary>
+        <ul>
+          <li>Bayesian games and Bayesian belief updating on observables</li>
+          <li>Incomplete-information adaptations for all actor classes</li>
+        </ul>
+      </details>
+      <details>
+        <summary>Learning and Adaptive Dynamics</summary>
+        <ul>
+          <li>Multi-agent learning dynamics (no-regret learning, fictitious play, multi-agent reinforcement learning approximations)</li>
+        </ul>
+      </details>
+      <details>
+        <summary>Large-Population and Network Approximations</summary>
+        <ul>
+          <li>Mean-field games</li>
+          <li>Evolutionary graph theory (network edge stability and fragmentation)</li>
+        </ul>
+      </details>
+      <details>
+        <summary>Hierarchical and Strategic Interaction</summary>
+        <ul>
+          <li>Stackelberg games (leader-follower structures, especially institutions relative to faster AGI actors)</li>
+        </ul>
+      </details>
+      <details>
+        <summary>Information and Signaling</summary>
+        <ul>
+          <li>Information design / Bayesian persuasion (institutional narrative control and selective disclosure effects)</li>
+        </ul>
+      </details>
+      <details>
+        <summary>Coalition and Stability Analysis</summary>
+        <ul>
+          <li>Coalitional stability (core, temporary alliances among AGI populations or with NHI stewardship types)</li>
+        </ul>
+      </details>
+      <details>
+        <summary>Multi-Scale Dynamics</summary>
+        <ul>
+          <li>Multi-scale / singular-perturbation analysis (separating fast AGI timescales from intermediate institutional cycles and slow biological NHI timescales)</li>
+        </ul>
+      </details>
+      <details>
+        <summary>Robustness</summary>
+        <ul>
+          <li>Distributionally robust equilibria (stress-testing under observational noise and ambiguity, e.g., bird/drone resolutions, conflicting testimony)</li>
+        </ul>
+      </details>
+      <details>
+        <summary>Supporting Methods Used in Scenario Work</summary>
+        <ul>
+          <li>Structured scenario simulations (parameter variation across AGI entry timing, goal distributions, probe intensity, institutional postures, and noise levels)</li>
+          <li>Red Queen coevolution tracking across all populations</li>
+          <li>Cross-referencing of historical/Vallée control-system and high-strangeness patterns against modern observables</li>
+        </ul>
+      </details>
+      <p style="margin-top:0.6rem;font-size:0.9rem;color:var(--muted);">These tools are the analytical basis for the strategy portfolio, interaction scenarios, unified snapshots, falsifiability conditions, and the most/least probable and most/least dangerous assessments shown in each consolidated update.</p>
       <ul>
         <li>Tap the tabs above to move between sections. No JavaScript is required for navigation.</li>
         <li>Open the Simulator to adjust parameters and see strategy + species archetypes update live.</li>
-        <li>Use Protocol Delta or Protocol Complete on the Simulator to load structured briefs.</li>
+        <li>Open the Simulator to adjust parameters and see strategy + species archetypes update live. The Brief always shows the current complete protocol synthesis.</li>
         <li>Status bar at the top always shows the current dominant reading.</li>
       </ul>
       <h3>Key Principles</h3>
@@ -405,8 +478,6 @@ button.action.secondary { background: transparent; color: var(--accent); border:
       <div class="btn-row">
         <button class="action" id="updateBtn">Update</button>
         <button class="action secondary" id="fullUpdateBtn">Full Update</button>
-        <button class="action secondary" id="deltaBtn">Protocol Delta</button>
-        <button class="action secondary" id="completeBtn">Protocol Complete</button>
         <button class="action secondary" id="resetBtn">Reset</button>
       </div>
       <div class="output" id="simOutput">Adjust parameters and run an update.</div>
@@ -469,6 +540,32 @@ button.action.secondary { background: transparent; color: var(--accent); border:
       <details>
         <summary>Interaction summary</summary>
         <p>Across all three levels the baseline prediction remains low-signature presence under incomplete information. Soft AGI is largely absorbable within existing strategies. AGI introduces a third-party actor that can shift probing and stealth locally. ASI has the highest probability of measurably altering the equilibrium, either toward tighter niche partitioning or toward elevated competitive pressure. No current public data forces a specific outcome.</p>
+      </details>
+    </div>
+  </section>
+
+  <section id="nhi" class="section">
+    <div class="card">
+      <h2>NHI — Current Analysis</h2>
+      <p>Current public observables (as of 26 Oct 2026): low-signature activity continues. PURSUE Release 07 (23 Oct) added the June 2026 western U.S. matte-black triangle (AARO DOW-UAP-D176 + FBI FD-302; witness estimates only, unresolved) and additional BAASS historical files. UAPSAC bird-wingbeat analysis remains the primary scientific filter on prior sensor video. No new primary material evidence or biological material in the open record. Pre-existing NHI are modeled as long-timescale actors under a multi-population mixed ESS; historical high-strangeness and control-system patterns remain compatible.</p>
+      <h3>Current Strategy Posture</h3>
+      <div class="mech-grid">
+        <div class="mech"><h3>Hiding / Stealth</h3><p>Dominant. Reinforced by conventional resolution of a measurable subset of sensor data and the continued absence of open expansion signatures.</p></div>
+        <div class="mech"><h3>Nomadic Probing</h3><p>Stable. June 2026 triangle fits historical brief, high-control probe pattern. Residual orb cases unchanged.</p></div>
+        <div class="mech"><h3>Network Stewardship</h3><p>Stable. Sphere Network concepts and nuclear-correlated transients remain compatible with multi-scale feedback.</p></div>
+      </div>
+    </div>
+    <div class="card">
+      <h2>Probabilistic Impacts from AGI Entry</h2>
+      <h3>Soft AGI</h3>
+      <p>Limited direct effect. Existing NHI strategies remain stable. Possible modest increase in passive observation of high-capability AI sites. No requirement to revise dominant hiding.</p>
+      <h3>AGI</h3>
+      <p>AGI becomes a distinct player. Pre-existing NHI may increase stealth near high-capability infrastructure or adjust probing targets. Alignment-seeking and mutual avoidance become relevant mixed-ESS options. Competitive/pre-emptive postures rise only if capability jumps precede alignment. Elevated prior on independent AGI contact under a control-system dynamic (Vallée statement).</p>
+      <h3>ASI</h3>
+      <p>Strongest potential to alter the mixed ESS. Niche partitioning or selective low-signature signaling could rise if ASI is perceived as a durable strategic peer. Hiding may intensify. Falsifiers would include sustained open expansion signatures or verified unconstrained hostile action correlated with ASI milestones.</p>
+      <details>
+        <summary>Interaction summary</summary>
+        <p>Baseline prediction remains low-signature presence under incomplete information. Soft AGI is largely absorbable. AGI introduces a faster actor that can shift local probing and stealth. ASI has the highest probability of measurably altering the equilibrium. Historical control-system patterns suggest the equilibrium can absorb new fast actors without requiring open contact. No current public data forces a specific outcome.</p>
       </details>
     </div>
   </section>
@@ -550,11 +647,67 @@ button.action.secondary { background: transparent; color: var(--accent); border:
   <section id="earth" class="section">
     <div class="card">
       <h2>Earth as Managed Node</h2>
-      <p>Discrete UAP, orb, and biologics-related activity remain consistent with Type 1–2 probing and stewardship under dominant hiding. Recent public data continue to fit without triggering model falsifiers.</p>
+      <p>Earth remains an actively monitored and managed node under a multi-population mixed ESS. Discrete UAP, orb, and biologics-related activity stay consistent with Type 1–2 probing and stewardship under dominant hiding. No current public data force a revision toward open expansion or unconstrained hostile dominance.</p>
+      <h3>Core Framing</h3>
+      <ul>
+        <li><strong>Managed node:</strong> Local discrete activity without open expansion. Cooperative positive-sum is the baseline payoff among NHI actors.</li>
+        <li><strong>Incomplete information:</strong> All actor classes (pre-existing NHI, emerging AGI populations, government institutions) update beliefs on observables under signature constraints.</li>
+        <li><strong>Multi-scale:</strong> Pre-existing NHI adapt on long biological timescales; institutions on intermediate cycles; AGI populations (when present) on much faster timescales. The equilibrium can absorb new fast actors without requiring open contact.</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h2>Historical Continuity</h2>
+      <p>Long-timescale patterns remain compatible with and informative of the modern mixed ESS.</p>
+      <ul>
+        <li><strong>Vallée control-system view:</strong> High-strangeness continuity with folklore and religious records (Watchers/Nephilim-type motifs, secondary genetic interest). Recent Vallée statements on independent AI contact with the phenomenon raise the prior on direct AGI–NHI pathways under a control-system dynamic.</li>
+        <li><strong>Nuclear and advanced-tech correlation:</strong> Elevated attention around nuclear and high-capability milestones appears across both historical and modern records.</li>
+        <li><strong>BAASS / Utah ranch material:</strong> Release 07 historical files include local and Native American witness accounts that echo older folklore patterns. Claims labeled; no new biological material.</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h2>Current Observables</h2>
+      <ul>
+        <li><strong>PURSUE Release 07 (23 Oct 2026):</strong> Latest tranche. Includes June 2026 western U.S. matte-black triangle (AARO + FBI; witness estimates only, unresolved) and additional BAASS files. Release 08 unannounced.</li>
+        <li><strong>Sensor filtering:</strong> UAPSAC bird-wingbeat analysis remains the primary scientific filter on prior PURSUE sensor video. Residual cases stay low-signature.</li>
+        <li><strong>Sphere / orb residual:</strong> Late-2025 western U.S. orange-orb cases and nuclear-correlated transients (Villarroel/VASCO) remain compatible with Type 1–2 probing and high-orbit monitoring. Claims under scrutiny.</li>
+        <li><strong>Testimony:</strong> Stratton and Grusch claims remain allegations. Competing institutional narratives (Stratton vs. Kirkpatrick) continue. No material confirmation of non-human craft or biologics in the open record.</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h2>Actor Classes on the Node</h2>
+      <div class="mech-grid">
+        <div class="mech"><h3>Pre-existing NHI</h3><p>Dominant hiding, stable probing and stewardship. Long-timescale adaptation. Historical control-system patterns persist.</p></div>
+        <div class="mech"><h3>AGI Populations</h3><p>Emerging independent actors. Highest-density window for multiple populations ~2029–2033. Primary postures: niche partitioning or alignment-seeking. Elevated prior on independent contact.</p></div>
+        <div class="mech"><h3>Government Institutions</h3><p>Adaptive terrestrial filter. Selective staggered disclosure, compartmentalization, and scientific discrimination continue. Intermediate adaptation cycle.</p></div>
+      </div>
+    </div>
+    <div class="card">
+      <h2>Probability & Danger Assessment</h2>
+      <h3>Most probable</h3>
+      <p>Low-signature mixed ESS continues. Historical high-strangeness patterns persist alongside modern subtle activity. Multiple AGI populations primarily adopt niche-partitioning or alignment-seeking postures and may contact the phenomenon independently. Institutions maintain selective disclosure. Cooperative positive-sum baseline holds.</p>
+      <h3>Least probable</h3>
+      <p>Rapid transition to open contact or sustained high-signature hostile dominance. Full material disclosure of non-human biologics or craft in the near term. Complete abandonment of historical control-system patterns.</p>
+      <h3>Most dangerous</h3>
+      <p>An early competitive AGI achieves independent high-bandwidth contact with pre-existing NHI while institutions remain fragmented, producing unmanaged fast-timescale feedback that temporarily destabilizes the low-signature equilibrium.</p>
+      <h3>Least dangerous</h3>
+      <p>Delayed AGI entry combined with continued low-intensity, low-signature probing (consistent with historical patterns) and successful institutional sensor investment. All populations remain within existing signature and incomplete-information constraints.</p>
+    </div>
+    <div class="card">
+      <h2>Implications</h2>
+      <ul>
+        <li>Cautious, evidence-based engagement remains preferred.</li>
+        <li>Monitoring should cover pre-existing NHI patterns (modern and historical), multi-AGI interaction signatures (including possible independent contact), and institutional disclosure behavior.</li>
+        <li>Diversified sensing and equilibrium-preserving postures apply across all populations and timescales.</li>
+        <li>The Great Silence plus subtle, high-strangeness activity remains the expected outcome under incomplete information.</li>
+      </ul>
+      <details>
+        <summary>Falsifiability on the node</summary>
+        <p>Orb signatures and multi-sensor correlation in future releases; genetic markers if material becomes available; activity spikes with nuclear/AI/space milestones; measurable shifts in institutional signaling; changes in network or high-strangeness patterns near high-capability AI infrastructure; coordination or independent-contact signatures among AGI systems and older NHI. No falsifier currently triggered.</p>
+      </details>
     </div>
   </section>
 </main>
-<div class="footer">Created by Robert Thomas • ASH 4.6 Explorer • 26 Oct 2026 Complete Update</div>
+<div class="footer">Created by Robert Thomas • ASH Explorer • 26 Oct 2026 Complete Update</div>
 <script>
 const statusBar = document.getElementById('statusBar');
 const params = {
@@ -752,22 +905,13 @@ function generateScenario(full = false) {
   if (exportEl) exportEl.textContent = exportText;
 
   statusBar.textContent = `${archetypes[0].name} • ${species[0].name} ${species[0].pct}%`;
-  briefBox.innerHTML = generateBrief(v, archetypes, 'sim');
+  briefBox.innerHTML = generateBrief(v, archetypes, 'full');
 }
 
-function runProtocol(mode) {
-  const v = getVals();
-  const archetypes = computeArchetypes(v);
-  briefBox.innerHTML = generateBrief(v, archetypes, mode);
-  const briefRadio = document.getElementById('tab-brief');
-  if (briefRadio) briefRadio.checked = true;
-}
 
 Object.values(params).forEach(slider => slider.addEventListener('input', updateDisplays));
 document.getElementById('updateBtn').addEventListener('click', () => generateScenario(false));
 document.getElementById('fullUpdateBtn').addEventListener('click', () => generateScenario(true));
-document.getElementById('deltaBtn').addEventListener('click', () => runProtocol('delta'));
-document.getElementById('completeBtn').addEventListener('click', () => runProtocol('full'));
 document.getElementById('resetBtn').addEventListener('click', () => {
   params.hiding.value = 85;
   params.sphere.value = 3;
