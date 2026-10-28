@@ -1,4 +1,4 @@
-# ASH 4.6 Explorer
+# ASH 5.1 Explorer
 
 Single-file interactive explorer for the Adaptive Strategy Hypothesis 4.6.
 
@@ -20,6 +20,6 @@ Single-file interactive explorer for the Adaptive Strategy Hypothesis 4.6.
 The file is self-contained. Pure-CSS tabs mean navigation works under `file://` on most phones. For a stable link, this repository is configured for GitHub Pages.
 
 ## Model
-ASH 4.6 is a non-anthropocentric framing of the Fermi silence via dominant hiding, a tiered Sphere Network, and a mixed ESS that now includes AGI and government institutions as distinct actors. Claims in the protocol outputs are labeled.
+ASH 5.1 is a non-anthropocentric framing of the Fermi silence via dominant hiding, a tiered Sphere Network, and a mixed ESS that now includes AGI and government institutions as distinct actors. Claims in the protocol outputs are labeled.
 
 Created by Robert Thomas.
