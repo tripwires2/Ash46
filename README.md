@@ -10,11 +10,11 @@ The explorer presents the current model assessment in a mobile-friendly, client-
 
 Current tabs:
 
-- **Overview** — Core thesis (Fermi Paradox, Drake equation, competing hypotheses, ASH resolution), status at a glance, and how to use
+- **Overview** — Core thesis (Fermi Paradox resolution, quiet expansion, Sphere Network and tiered presence, strategy space, Earth as managed node, payoff structure, testable predictions)
 - **Rankings** — Current model strategy and actor orderings under the baseline assessment
 - **Foundations** — Evolutionary game theory, evolutionary dynamics, hybridization (K-strategy), multi-scale adaptation, and original archetype lists
 - **Intelligence Brief** — Full current synthesis (always populated)
-- **Earth** — Managed-node framing, probability and danger assessment, watchlist, Sphere Network (Jackson attribution), historical continuity
+- **Earth** — Managed-node framing, probability and danger assessment, watchlist, Sphere Network, historical continuity
 - **Strategies** — Strategy space for NHI, AGI, and government institutions with current status lines
 - **AGI** — Current analysis, probabilistic timeline, and latest signals
 - **NHI** — Current analysis, historical pattern matching score, and latest signals
@@ -25,9 +25,9 @@ Open the live site or the `index.html` file in any modern browser. Navigation us
 
 ## Model overview
 
-ASH treats non-detection as the stable equilibrium under light-speed and signature constraints, incomplete information, and a multi-population mixed evolutionary stable strategy. Earth is modeled as a managed node. Hybridization is a long-horizon K-strategy. The same constraints that produce the Great Silence also limit open disclosure.
+ASH treats detectability and contact as contingent outcomes of diverse extraterrestrial intelligence strategies rather than as evidence of rarity or extinction. Hiding and low-signature presence are the dominant equilibrium for mature civilizations. Quiet expansion (seed factories, archival payloads, local computation) is the expected form once autonomous off-planet capacity is reached. Earth is modeled as a managed node. The long-term payoff is cooperative and positive-sum. The model remains falsifiable: sustained high-signature expansionist presence or verified open contact would require major revision.
 
-Current assessment (27 Oct 2026): strategy portfolio holds; historical pattern score partial; highest-density AGI window 2029–2033; no falsifiers met.
+Current assessment (10 Nov 2026): strategy portfolio holds; hiding dominant; Earth as managed node; no falsifiers met.
 
 ## Sharing
 
