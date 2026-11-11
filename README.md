@@ -13,15 +13,17 @@ Current tabs:
 - **Overview** — Core thesis (Fermi Paradox resolution, quiet expansion, Sphere Network and tiered presence, strategy space, Earth as managed node, payoff structure, testable predictions)
 - **Rankings** — Current model strategy and actor orderings under the baseline assessment
 - **Foundations** — Evolutionary game theory, evolutionary dynamics, hybridization (K-strategy), multi-scale adaptation, and original archetype lists
-- **Intelligence Brief** — Full current synthesis (always populated)
+- **Intelligence Brief** — Full current synthesis with sectioned layout, source-class tags, and status at a glance
 - **Earth** — Managed-node framing, probability and danger assessment, watchlist, Sphere Network, historical continuity
 - **Strategies** — Strategy space for NHI, AGI, and government institutions with current status lines
-- **AGI** — Current analysis, probabilistic timeline, and latest signals
+- **AGI** — Current analysis, visual probabilistic timeline, and latest signals
 - **NHI** — Current analysis, historical pattern matching score, and latest signals
+
+Major tabs include a status line and a collapsible note on how the section relates to the model.
 
 ## How to use
 
-Open the live site or the `index.html` file in any modern browser. Navigation uses pure CSS radio buttons, so tabs work on mobile and when the file is shared directly. The Intelligence Brief is static and displays the complete synthesis on load.
+Open the live site or the `index.html` file in any modern browser. Navigation uses pure CSS radio buttons, so tabs work on mobile and when the file is shared directly. The Intelligence Brief displays the complete synthesis on load.
 
 ## Model overview
 
